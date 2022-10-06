@@ -8,24 +8,30 @@ namespace BTEJA_Lexer_Cv3
 {
     class Token
     {
-        public TokenTypeEnum TokenType { get; set; }
+        public TokenType Type { get; set; }
         public String? Value { get; set; }
-        public enum TokenTypeEnum
+        public enum TokenType
         {
             Const,
             Value,
             Eq,
-            Semicolon,
-            ident,
-            num_lit
+            SemiColon,
+            Ident,
+            NumLit,
+            SmallerOrEq,
+            GreaterOrEq,
+            SetEq,
+            Colon,
+            Smaller,
+            Greater
         }
 
-        public Token(TokenTypeEnum tokenType)
+        public Token(TokenType type)
         {
-            TokenType = tokenType;
+            Type = type;
         }
 
-        public Token(TokenTypeEnum tokenType, string value) : this(tokenType)
+        public Token(TokenType Type, string value) : this(Type)
         {
             Value = value;
         }

@@ -11,6 +11,7 @@ namespace BTEJA_Lexer_Cv3
         private String vstup;
         private int index = 0;
         private bool konec = false;
+        private List<Token> tokens = new List<Token> ();
 
         private int state;
         /*
@@ -34,53 +35,102 @@ namespace BTEJA_Lexer_Cv3
         }
 
         private List<char> breakPoints = new List<char>(new char[] { '?', '!', ',', ';', '=', ':', '#', '<', '>', '+', '-', '*', '/', '(', ')','.'});
-        private List<char> alphabet = new List<char>("abcdefghijklmnopqrstuvwxyz".ToCharArray());
+        //private List<char> alphabet = new List<char>("abcdefghijklmnopqrstuvwxyz".ToCharArray());
         public List<Token> Lexicate(String vstup) {
             this.vstup = vstup;
 
             while (konec != false)
             {
-                ReadStart();
-
+                if (hasNext())
+                {
+                    char v = Next();
+                    if (breakPoints.Contains(v))
+                    {
+                        ReadPoint();
+                    }
+                    if (v == ' ')
+                    {
+                        Pop();
+                    }
+                    else {
+                        ReadText();
+                    }
+                }
+                else
+                {
+                    konec = true;
+                }
             }
-
-
-
-
-
 
             return null;
         }
-
-        private void ReadStart() {
-            if (hasNext())
-            {
-                char v = Next();
-                if (breakPoints.Contains(v))
-                {
-                    ReadPoint();
-                }
-                if (v == ' ')
-                {
-                    Pop();
-                    ReadStart();
-                }
-                ReadText();
-            }
-            else {
-                konec = true;
-            }
-
-        }
-
         private void ReadPoint()
         {
-            throw new NotImplementedException();
+            char v = Pop();
+            char v2 = ' ';
+            if (v == '<' || v == '>' || v == ':')
+            {
+                if (hasNext())
+                {
+                    v2 = Next();
+                    if (v2 == '=')
+                    {
+                        Pop();
+                        switch (v)
+                        {
+                            case '<':
+                                tokens.Add(new Token(Token.TokenType.SmallerOrEq));
+                                break;
+                            case '>':
+                                tokens.Add(new Token(Token.TokenType.GreaterOrEq));
+                                break;
+                            case ':':
+                                tokens.Add(new Token(Token.TokenType.SetEq));
+                                break;
+                        }
+                    }
+                    else {
+                        switch (v)
+                        {
+                            case '<':
+                                tokens.Add(new Token(Token.TokenType.Smaller));
+                                break;
+                            case '>':
+                                tokens.Add(new Token(Token.TokenType.Greater));
+                                break;
+                            case ':':
+                                tokens.Add(new Token(Token.TokenType.Colon));
+                                break;
+                        }
+                    }
+                }
+                else
+                {
+                    konec = true;
+                }
+            }
+            else {
+                switch (v)
+                {
+                    case '?':
+                        tokens.Add(new Token(Token.TokenType.Colon));
+                        break;
+                        //atd
+                }
+            }
         }
 
         private void ReadText()
         {
-            throw new NotImplementedException();
+            char v = ' ';
+            string s = "";
+            while (hasNext() && (!breakPoints.Contains(Next()) && Next() != ' ')) {
+                s.Append(Pop());
+            }
+            if (hasNext()) { 
+                konec = true;
+            }
+            //make token logic
         }
     }
 }
