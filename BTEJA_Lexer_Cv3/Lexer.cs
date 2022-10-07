@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BTEJA_Lexer_Cv3
+﻿namespace BTEJA_Lexer_Cv3
 {
     class Lexer
     {
         private String vstup;
         private int index = 0;
         private bool konec = false;
-        private List<Token> tokens = new List<Token> ();
+        private List<Token> tokens = new List<Token>();
 
         private int state;
         /*
@@ -22,47 +16,53 @@ namespace BTEJA_Lexer_Cv3
          * 
          */
 
-        private char Next() {
-            return vstup[index + 1];
-        }
-        private char Pop() {
-            index++;
+        private char Next()
+        {
             return vstup[index];
         }
-        private bool hasNext() {
-            if (index<vstup.Length-1) return true;
+        private char Pop()
+        {
+            index++;
+            return vstup[index - 1];
+        }
+        private bool hasNext()
+        {
+            if (index <= vstup.Length - 1) return true;
             return false;
         }
 
-        private List<char> breakPoints = new List<char>(new char[] { '?', '!', ',', ';', '=', ':', '#', '<', '>', '+', '-', '*', '/', '(', ')','.'});
+        private List<char> breakPoints = new List<char>(new char[] { '?', '!', ',', ';', '=', ':', '#', '<', '>', '+', '-', '*', '/', '(', ')', '.' });
+        private List<string> keyWords = new List<string>(new string[] { "ident", "number", "const", "var", "procedure", "call", "begin", "end", "if", "then", "while", "do", "odd" });
         //private List<char> alphabet = new List<char>("abcdefghijklmnopqrstuvwxyz".ToCharArray());
-        public List<Token> Lexicate(String vstup) {
+        public List<Token> Lexicate(String vstup)
+        {
             this.vstup = vstup;
 
-            while (konec != false)
+            while (!konec)
             {
-                if (hasNext())
+                char v = Next();
+                Console.WriteLine("Reading: " + v);
+                if (breakPoints.Contains(v))
                 {
-                    char v = Next();
-                    if (breakPoints.Contains(v))
-                    {
-                        ReadPoint();
-                    }
-                    if (v == ' ')
-                    {
-                        Pop();
-                    }
-                    else {
-                        ReadText();
-                    }
+                    Console.WriteLine("ReadPoint");
+                    ReadPoint();
+                }
+                else if (v == ' ')
+                {
+                    Console.WriteLine("PopIT");
+                    Pop();
                 }
                 else
+                {
+                    Console.WriteLine("ReadText");
+                    ReadText();
+                }
+                if (!hasNext())
                 {
                     konec = true;
                 }
             }
-
-            return null;
+            return tokens;
         }
         private void ReadPoint()
         {
@@ -78,29 +78,18 @@ namespace BTEJA_Lexer_Cv3
                         Pop();
                         switch (v)
                         {
-                            case '<':
-                                tokens.Add(new Token(Token.TokenType.SmallerOrEq));
-                                break;
-                            case '>':
-                                tokens.Add(new Token(Token.TokenType.GreaterOrEq));
-                                break;
-                            case ':':
-                                tokens.Add(new Token(Token.TokenType.SetEq));
-                                break;
+                            case '<': tokens.Add(new Token(Token.TokenType.SmallerOrEqual)); break;
+                            case '>': tokens.Add(new Token(Token.TokenType.GreaterOrEqual)); break;
+                            case ':': tokens.Add(new Token(Token.TokenType.SetEqual)); break;
                         }
                     }
-                    else {
+                    else
+                    {
                         switch (v)
                         {
-                            case '<':
-                                tokens.Add(new Token(Token.TokenType.Smaller));
-                                break;
-                            case '>':
-                                tokens.Add(new Token(Token.TokenType.Greater));
-                                break;
-                            case ':':
-                                tokens.Add(new Token(Token.TokenType.Colon));
-                                break;
+                            case '<': tokens.Add(new Token(Token.TokenType.Smaller)); break;
+                            case '>': tokens.Add(new Token(Token.TokenType.Greater)); break;
+                            case ':': tokens.Add(new Token(Token.TokenType.Colon)); break;
                         }
                     }
                 }
@@ -109,13 +98,24 @@ namespace BTEJA_Lexer_Cv3
                     konec = true;
                 }
             }
-            else {
+            else
+            {
+                Console.WriteLine("Adding: " + v);
                 switch (v)
                 {
-                    case '?':
-                        tokens.Add(new Token(Token.TokenType.Colon));
-                        break;
-                        //atd
+                    case '?': tokens.Add(new Token(Token.TokenType.Question)); break;
+                    case '!': tokens.Add(new Token(Token.TokenType.Exclamation)); break;
+                    case ',': tokens.Add(new Token(Token.TokenType.Comma)); break;
+                    case ';': tokens.Add(new Token(Token.TokenType.SemiColon)); break;
+                    case '#': tokens.Add(new Token(Token.TokenType.Hash)); break;
+                    case '+': tokens.Add(new Token(Token.TokenType.Plus)); break;
+                    case '-': tokens.Add(new Token(Token.TokenType.Minus)); break;
+                    case '*': tokens.Add(new Token(Token.TokenType.Multi)); break;
+                    case '/': tokens.Add(new Token(Token.TokenType.Division)); break;
+                    case '(': tokens.Add(new Token(Token.TokenType.LParanthesis)); break;
+                    case ')': tokens.Add(new Token(Token.TokenType.LParanthesis)); break;
+                    case '.': tokens.Add(new Token(Token.TokenType.Dot)); break;
+                    case '=': tokens.Add(new Token(Token.TokenType.Equals)); break;
                 }
             }
         }
@@ -124,13 +124,53 @@ namespace BTEJA_Lexer_Cv3
         {
             char v = ' ';
             string s = "";
-            while (hasNext() && (!breakPoints.Contains(Next()) && Next() != ' ')) {
-                s.Append(Pop());
+            string sLower = "";
+            while (!breakPoints.Contains(Next()) && Next() != ' ')
+            {
+                s = s + Pop().ToString();
+                if (!hasNext())
+                {
+                    break;
+                }
             }
-            if (hasNext()) { 
+            sLower = s.ToLower();
+            if (keyWords.Contains(sLower))
+            {
+                Console.WriteLine("Adding tokenenum: " + s);
+                switch (sLower)
+                {
+                    case "number": tokens.Add(new Token(Token.TokenType.Number)); break;
+                    case "const": tokens.Add(new Token(Token.TokenType.Const)); break;
+                    case "var": tokens.Add(new Token(Token.TokenType.Var)); break;
+                    case "procedure": tokens.Add(new Token(Token.TokenType.Procedure)); break;
+                    case "call": tokens.Add(new Token(Token.TokenType.Call)); break;
+                    case "begin": tokens.Add(new Token(Token.TokenType.Begin)); break;
+                    case "end": tokens.Add(new Token(Token.TokenType.End)); break;
+                    case "if": tokens.Add(new Token(Token.TokenType.If)); break;
+                    case "then": tokens.Add(new Token(Token.TokenType.Then)); break;
+                    case "while": tokens.Add(new Token(Token.TokenType.While)); break;
+                    case "do": tokens.Add(new Token(Token.TokenType.Do)); break;
+                    case "odd": tokens.Add(new Token(Token.TokenType.Odd)); break;
+                }
+            }
+            else
+            {
+                int num = 0;
+                if (Int32.TryParse(s, out num))
+                {
+                    Console.WriteLine("Adding numLit: " + s);
+                    tokens.Add(new Token(Token.TokenType.NumLit, num.ToString()));
+                }
+                else if (s != "\n")
+                {
+                    Console.WriteLine("Adding ident: " + s);
+                    tokens.Add(new Token(Token.TokenType.Ident, s));
+                }
+            }
+            if (!hasNext())
+            {
                 konec = true;
             }
-            //make token logic
         }
     }
 }
