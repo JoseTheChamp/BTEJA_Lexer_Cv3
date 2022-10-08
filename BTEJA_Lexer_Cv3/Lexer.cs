@@ -31,7 +31,7 @@
             return false;
         }
 
-        private List<char> breakPoints = new List<char>(new char[] { '?', '!', ',', ';', '=', ':', '#', '<', '>', '+', '-', '*', '/', '(', ')', '.' });
+        private List<char> breakPoints = new List<char>(new char[] { '?', '!', ',', ';', '=', ':', '#', '<', '>', '+', '-', '*', '/', '(', ')', '.','\n','\r' });
         private List<string> keyWords = new List<string>(new string[] { "ident", "number", "const", "var", "procedure", "call", "begin", "end", "if", "then", "while", "do", "odd" });
         //private List<char> alphabet = new List<char>("abcdefghijklmnopqrstuvwxyz".ToCharArray());
         public List<Token> Lexicate(String vstup)
@@ -41,20 +41,16 @@
             while (!konec)
             {
                 char v = Next();
-                Console.WriteLine("Reading: " + v);
                 if (breakPoints.Contains(v))
                 {
-                    Console.WriteLine("ReadPoint");
                     ReadPoint();
                 }
                 else if (v == ' ')
                 {
-                    Console.WriteLine("PopIT");
                     Pop();
                 }
                 else
                 {
-                    Console.WriteLine("ReadText");
                     ReadText();
                 }
                 if (!hasNext())
@@ -100,7 +96,6 @@
             }
             else
             {
-                Console.WriteLine("Adding: " + v);
                 switch (v)
                 {
                     case '?': tokens.Add(new Token(Token.TokenType.Question)); break;
@@ -116,6 +111,9 @@
                     case ')': tokens.Add(new Token(Token.TokenType.LParanthesis)); break;
                     case '.': tokens.Add(new Token(Token.TokenType.Dot)); break;
                     case '=': tokens.Add(new Token(Token.TokenType.Equals)); break;
+                    case '\n': break;
+                    case '\r': break;
+
                 }
             }
         }
@@ -136,7 +134,6 @@
             sLower = s.ToLower();
             if (keyWords.Contains(sLower))
             {
-                Console.WriteLine("Adding tokenenum: " + s);
                 switch (sLower)
                 {
                     case "number": tokens.Add(new Token(Token.TokenType.Number)); break;
@@ -158,12 +155,10 @@
                 int num = 0;
                 if (Int32.TryParse(s, out num))
                 {
-                    Console.WriteLine("Adding numLit: " + s);
                     tokens.Add(new Token(Token.TokenType.NumLit, num.ToString()));
                 }
                 else if (s != "\n")
                 {
-                    Console.WriteLine("Adding ident: " + s);
                     tokens.Add(new Token(Token.TokenType.Ident, s));
                 }
             }
