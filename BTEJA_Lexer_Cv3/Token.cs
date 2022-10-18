@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BTEJA_Lexer_Cv3
 {
-    class Token
+    public class Token
     {
         public TokenType Type { get; set; }
         public String? Value { get; set; }

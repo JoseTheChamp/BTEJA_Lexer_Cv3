@@ -1,20 +1,21 @@
 ﻿namespace BTEJA_Lexer_Cv3
 {
-    class Lexer
+    public class Lexer
     {
         private String vstup;
         private int index = 0;
+        private int tokenIndex = 0;
         private bool konec = false;
         private List<Token> tokens = new List<Token>();
 
-        private int state;
-        /*
-         *  1 - read point
-         *  2 - read text
-         *  3 - Start Reading
-         * 
-         * 
-         */
+        public Token PeekToken() {
+            return tokens[tokenIndex];
+        }
+
+        public Token ReadToken() { 
+            tokenIndex++;
+            return tokens[tokenIndex-1];
+        }
 
         private char Next()
         {
