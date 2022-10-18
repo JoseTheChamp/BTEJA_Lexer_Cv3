@@ -45,7 +45,9 @@ namespace BTEJA_Lexer_Cv3
             Do,
             Odd,
             If,
-            Then
+            Then,
+            Cond, //temporary
+            Expr
         }
 
         public Token(TokenType type)

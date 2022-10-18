@@ -12,7 +12,7 @@ namespace BTEJA_Lexer_Cv3.ParserRes
 
         public override double eval()
         {
-            throw new NotImplementedException();
+            return NumberLit;
         }
     }
 }

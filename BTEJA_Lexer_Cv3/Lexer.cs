@@ -9,7 +9,11 @@
         private List<Token> tokens = new List<Token>();
 
         public Token PeekToken() {
-            return tokens[tokenIndex];
+            if (tokenIndex < tokens.Count)
+            {
+                return tokens[tokenIndex];
+            }
+            return null;
         }
 
         public Token ReadToken() { 
@@ -33,7 +37,7 @@
         }
 
         private List<char> breakPoints = new List<char>(new char[] { '?', '!', ',', ';', '=', ':', '#', '<', '>', '+', '-', '*', '/', '(', ')', '.','\n','\r' });
-        private List<string> keyWords = new List<string>(new string[] { "ident", "number", "const", "var", "procedure", "call", "begin", "end", "if", "then", "while", "do", "odd" });
+        private List<string> keyWords = new List<string>(new string[] { "ident", "number", "const", "var", "procedure", "call", "begin", "end", "if", "then", "while", "do", "odd",/*Temporary*/"cond","expr" });
         //private List<char> alphabet = new List<char>("abcdefghijklmnopqrstuvwxyz".ToCharArray());
         public List<Token> Lexicate(String vstup)
         {
@@ -149,6 +153,8 @@
                     case "while": tokens.Add(new Token(Token.TokenType.While)); break;
                     case "do": tokens.Add(new Token(Token.TokenType.Do)); break;
                     case "odd": tokens.Add(new Token(Token.TokenType.Odd)); break;
+                    case "cond": tokens.Add(new Token(Token.TokenType.Cond)); break;
+                    case "expr": tokens.Add(new Token(Token.TokenType.Expr)); break;
                 }
             }
             else

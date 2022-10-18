@@ -11,5 +11,15 @@ namespace BTEJA_Lexer_Cv3.Parser
     {
         public Condition Con { get; set; }
         public Expression Ex { get; set; }
+
+        public double Evaluate() {
+            if (Con != null)
+            {
+                return Con.eval();
+            }
+            else { 
+                return Ex.eval();
+            }
+        }
     }
 }

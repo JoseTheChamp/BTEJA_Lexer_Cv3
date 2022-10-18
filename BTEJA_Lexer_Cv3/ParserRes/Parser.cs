@@ -20,12 +20,12 @@ namespace BTEJA_Lexer_Cv3.ParserRes
         public ProgramBlock Parse()
         {
             ProgramBlock programBlock = new ProgramBlock();
-            if (lexer.PeekToken().Type.ToString() == "cond")
+            if (lexer.PeekToken().Type == Token.TokenType.Cond)
             {
                 lexer.ReadToken();
                 programBlock.Con = ReadCondition();
             }
-            else if (lexer.PeekToken().Type.ToString() == "expr")
+            else if (lexer.PeekToken().Type == Token.TokenType.Expr)
             {
                 lexer.ReadToken();
                 programBlock.Ex = ReadExpression();
@@ -37,7 +37,7 @@ namespace BTEJA_Lexer_Cv3.ParserRes
         }
 
         private Condition ReadCondition() {
-            if (lexer.PeekToken().Type.ToString() == "odd")
+            if (lexer.PeekToken().Type == Token.TokenType.Odd)
             {
                 return ReadOddCondition();
             }
@@ -48,14 +48,43 @@ namespace BTEJA_Lexer_Cv3.ParserRes
 
         private Expression ReadExpression()
         {
-            String op = "";
-            if (lexer.PeekToken().Type.ToString() == "+" || lexer.PeekToken().Type.ToString() == "-")
+            Expression Expr;
+            Token.TokenType op = Token.TokenType.Begin;
+            if (lexer.PeekToken().Type == Token.TokenType.Plus || lexer.PeekToken().Type == Token.TokenType.Minus)
             {
-                op = lexer.ReadToken().ToString();
+                op = lexer.ReadToken().Type;
             }
-            //Expression Ex = ReadTerm();
+            if (op == Token.TokenType.Minus)
+            {
+                MinusUnary minusUnary = new MinusUnary();
+                minusUnary.Expr = ReadTerm();
+                Expr = minusUnary;
+            } else if (op == Token.TokenType.Plus) {
+                PlusUnary plusUnary = new PlusUnary();
+                plusUnary.Expr = ReadTerm();
+                Expr = plusUnary;
+            }
+            else {
+                Expr = ReadTerm();
+            }
 
-            return null;
+            while (lexer.PeekToken() != null && (lexer.PeekToken().Type == Token.TokenType.Plus || lexer.PeekToken().Type == Token.TokenType.Minus)) { 
+                op = lexer.ReadToken().Type;
+                if (op == Token.TokenType.Minus)
+                {
+                    Minus minus = new Minus();
+                    minus.Left = Expr;
+                    minus.Right = ReadTerm();
+                    Expr = minus;
+                }
+                else{
+                    Plus plus = new Plus();
+                    plus.Left = Expr;
+                    plus.Right = ReadTerm();
+                    Expr = plus;
+                }
+            }
+            return Expr;
         }
 
         private OddCondition ReadOddCondition() {
@@ -67,35 +96,35 @@ namespace BTEJA_Lexer_Cv3.ParserRes
 
         private BinaryRelCondition ReadBinaryRelCondition() {
             Expression ex1 = ReadExpression();
-            String op = lexer.ReadToken().ToString();
+            Token.TokenType op = lexer.ReadToken().Type;
             switch (op)
             {
-                case "=": 
+                case Token.TokenType.Equals: 
                     EqualsRel equalsRel = new EqualsRel();
                     equalsRel.Left = ex1;
                     equalsRel.Right = ReadExpression();
                     return equalsRel;
-                case "#":
+                case Token.TokenType.Hash:
                     ModuloRel moduloRel = new ModuloRel();
                     moduloRel.Left = ex1;
                     moduloRel.Right = ReadExpression();
                     return moduloRel;
-                case "<":
+                case Token.TokenType.Smaller:
                     Lessthanrel lessthanrel = new Lessthanrel();
                     lessthanrel.Left = ex1;
                     lessthanrel.Right = ReadExpression();
                     return lessthanrel;
-                case "<=":
+                case Token.TokenType.SmallerOrEqual:
                     lessEqRel lessEqRel = new lessEqRel();
                     lessEqRel.Left = ex1;
                     lessEqRel.Right = ReadExpression();
                     return lessEqRel;
-                case ">":
+                case Token.TokenType.Greater:
                     GreaterThanRel greaterThanRel = new GreaterThanRel();
                     greaterThanRel.Left = ex1;
                     greaterThanRel.Right = ReadExpression();
                     return greaterThanRel;
-                case ">=":
+                case Token.TokenType.GreaterOrEqual:
                     GreaterEqRel greaterEqRel = new GreaterEqRel();
                     greaterEqRel.Left = ex1;
                     greaterEqRel.Right = ReadExpression();
@@ -103,10 +132,54 @@ namespace BTEJA_Lexer_Cv3.ParserRes
                 default: throw new Exception("Parsing error. Expected = # < <= > >= .");
             }
         }
-        /*
-        private Term ReadTerm() { 
         
-        }*/
+        private Expression ReadTerm() {
+            Expression Expr;
+            String op = "";
+            Expr = ReadFactor();
+            while (lexer.PeekToken() != null && (lexer.PeekToken().Type == Token.TokenType.Multi || lexer.PeekToken().Type == Token.TokenType.Division))
+            {
+                op = lexer.ReadToken().ToString();
+                if (op == "/")
+                {
+                    Divide divide = new Divide();
+                    divide.Left = Expr;
+                    divide.Right = ReadFactor();
+                    Expr = divide;
+                }
+                else
+                {
+                    Multiply multiply = new Multiply();
+                    multiply.Left = Expr;
+                    multiply.Right = ReadFactor();
+                    Expr = multiply;
+                }
+            }
+            return Expr;
+        }
+
+        private Expression ReadFactor()
+        {
+            Expression Expr;
+            if (lexer.PeekToken().Type == Token.TokenType.LParanthesis)
+            {
+                lexer.ReadToken();
+                Expr = ReadExpression();
+                lexer.ReadToken();
+            }
+            else { 
+                Expr = ReadLiteralExpression();
+            }
+            return Expr;
+        }
+
+        private Expression ReadLiteralExpression()
+        {
+            LiteralExpression expr = new LiteralExpression();
+            expr.NumberLit = Double.Parse(lexer.ReadToken().Value);
+            return expr;
+        }
 
     }
 }
+
