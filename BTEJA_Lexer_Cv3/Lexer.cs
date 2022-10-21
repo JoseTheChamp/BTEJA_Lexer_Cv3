@@ -35,9 +35,8 @@
             if (index <= vstup.Length - 1) return true;
             return false;
         }
-
         private List<char> breakPoints = new List<char>(new char[] { '?', '!', ',', ';', '=', ':', '#', '<', '>', '+', '-', '*', '/', '(', ')', '.','\n','\r' });
-        private List<string> keyWords = new List<string>(new string[] { "ident", "number", "const", "var", "procedure", "call", "begin", "end", "if", "then", "while", "do", "odd",/*Temporary*/"cond","expr" });
+        private List<string> keyWords = new List<string>(new string[] { "ident", "number", "const", "var", "procedure", "call", "begin", "end", "if", "then", "while", "do", "odd", "read", "write"}); /*Temporary"cond","expr"*/
         //private List<char> alphabet = new List<char>("abcdefghijklmnopqrstuvwxyz".ToCharArray());
         public List<Token> Lexicate(String vstup)
         {
@@ -153,12 +152,15 @@
                     case "while": tokens.Add(new Token(Token.TokenType.While)); break;
                     case "do": tokens.Add(new Token(Token.TokenType.Do)); break;
                     case "odd": tokens.Add(new Token(Token.TokenType.Odd)); break;
-                    case "cond": tokens.Add(new Token(Token.TokenType.Cond)); break;
-                    case "expr": tokens.Add(new Token(Token.TokenType.Expr)); break;
+                    case "read": tokens.Add(new Token(Token.TokenType.Read)); break;
+                    case "write": tokens.Add(new Token(Token.TokenType.Write)); break;
+                        //case "cond": tokens.Add(new Token(Token.TokenType.Cond)); break;
+                        //case "expr": tokens.Add(new Token(Token.TokenType.Expr)); break;
                 }
             }
             else
             {
+                //TODO neumi cist desetine mista. I kvuli vyse breakpoints je i tecka
                 int num = 0;
                 if (Int32.TryParse(s, out num))
                 {

@@ -1,1 +1,2 @@
-﻿expr 2 + 2 * 2
+﻿const max = 100,Petr = 447;
+var a,b, d;

@@ -19,8 +19,16 @@ foreach (Token token in tokens)
 }
 
 Parser parser = new Parser(lexer);
-ProgramBlock programBlock = parser.Parse();
-Console.WriteLine("Vysledek: " + programBlock.Evaluate());
+Block block = parser.Parse();
+Console.WriteLine("Vysledek: " + block);
+foreach (var item in block.Consts)
+{
+    Console.WriteLine(item.ident + "  " + item.value);
+}
+foreach (var item in block.Vars)
+{
+    Console.WriteLine(item.ident);
+}
 
 /*
 

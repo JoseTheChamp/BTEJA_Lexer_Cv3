@@ -6,7 +6,13 @@ using System.Threading.Tasks;
 
 namespace BTEJA_Lexer_Cv3.ParserRes
 {
-    internal class Term
+    public class ReadStatement : Statement
     {
+        private String ident;
+
+        public ReadStatement(string ident)
+        {
+            this.ident = ident;
+        }
     }
 }

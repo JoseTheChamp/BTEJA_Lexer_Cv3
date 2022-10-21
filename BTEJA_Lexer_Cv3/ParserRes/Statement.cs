@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace BTEJA_Lexer_Cv3.ParserRes
 {
-    internal class Factor
+    public abstract class Statement
     {
+
     }
 }
