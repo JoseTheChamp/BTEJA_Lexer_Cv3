@@ -21,47 +21,33 @@ foreach (Token token in tokens)
 Parser parser = new Parser(lexer);
 Block block = parser.Parse();
 
-//Testing print
+Console.WriteLine();
+Console.WriteLine("Následuje částečný testovací výpis.");
+Console.WriteLine();
+
+
 Console.WriteLine("Vysledek: " + block);
+Console.WriteLine(" Constants:");
 foreach (var item in block.Consts)
 {
-    Console.WriteLine(item.ident + "  " + item.value);
+    Console.WriteLine("  " + item.ident + "  " + item.value);
 }
+Console.WriteLine(" vars:");
 foreach (var item in block.Vars)
 {
-    Console.WriteLine(item.ident);
+    Console.WriteLine("  " + item.ident);
 }
 foreach (var procedure in block.Procedures)
 {
     Console.WriteLine("Procedure: " + procedure.Ident);
+    Console.WriteLine(" Procedure Vars:");
     foreach (var var1 in procedure.Block.Vars)
     {
-        Console.WriteLine(var1.ident);
+        Console.WriteLine("  " + var1.ident);
     }
 }
 
-/*
 
-
-VAR x, squ;
-
-PROCEDURE square;
-BEGIN
-   squ:= x * x
-END;
-
-BEGIN
-   x := 1;
-   WHILE x <= 10 DO
-   BEGIN
-      CALL square;
-      ! squ;
-      x := x + 1
-   END
-END.
-
-
-
-*/
-
-
+Console.WriteLine();
+Console.WriteLine("Úspěšně zparsované.");
+Console.WriteLine();
