@@ -36,8 +36,7 @@
             return false;
         }
         private List<char> breakPoints = new List<char>(new char[] { '?', '!', ',', ';', '=', ':', '#', '<', '>', '+', '-', '*', '/', '(', ')', '.','\n','\r' });
-        private List<string> keyWords = new List<string>(new string[] { "ident", "number", "const", "var", "procedure", "call", "begin", "end", "if", "then", "while", "do", "odd", "read", "write"}); /*Temporary"cond","expr"*/
-        //private List<char> alphabet = new List<char>("abcdefghijklmnopqrstuvwxyz".ToCharArray());
+        private List<string> keyWords = new List<string>(new string[] { "ident", "const", "var", "procedure", "call", "begin", "end", "if", "then", "while", "do", "odd"});
         public List<Token> Lexicate(String vstup)
         {
             this.vstup = vstup;
@@ -136,11 +135,11 @@
                 }
             }
             sLower = s.ToLower();
+            sLower = sLower.Trim();
             if (keyWords.Contains(sLower))
             {
                 switch (sLower)
                 {
-                    case "number": tokens.Add(new Token(Token.TokenType.Number)); break;
                     case "const": tokens.Add(new Token(Token.TokenType.Const)); break;
                     case "var": tokens.Add(new Token(Token.TokenType.Var)); break;
                     case "procedure": tokens.Add(new Token(Token.TokenType.Procedure)); break;
@@ -152,10 +151,6 @@
                     case "while": tokens.Add(new Token(Token.TokenType.While)); break;
                     case "do": tokens.Add(new Token(Token.TokenType.Do)); break;
                     case "odd": tokens.Add(new Token(Token.TokenType.Odd)); break;
-                    case "read": tokens.Add(new Token(Token.TokenType.Read)); break;
-                    case "write": tokens.Add(new Token(Token.TokenType.Write)); break;
-                        //case "cond": tokens.Add(new Token(Token.TokenType.Cond)); break;
-                        //case "expr": tokens.Add(new Token(Token.TokenType.Expr)); break;
                 }
             }
             else
@@ -164,7 +159,7 @@
                 int num = 0;
                 if (Int32.TryParse(s, out num))
                 {
-                    tokens.Add(new Token(Token.TokenType.NumLit, num.ToString()));
+                    tokens.Add(new Token(Token.TokenType.Number, num.ToString()));
                 }
                 else if (s != "\n")
                 {

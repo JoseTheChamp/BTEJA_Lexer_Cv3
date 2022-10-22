@@ -19,7 +19,10 @@ namespace BTEJA_Lexer_Cv3.ParserRes
 
         public Block Parse()
         {
-            return ReadBlock();
+            Block block = ReadBlock();
+            if (lexer.PeekToken().Type != Token.TokenType.Dot) throw new Exception("Expected . after statements [Parsing]]");
+            lexer.ReadToken();
+            return block;
         }
 
         private Block ReadBlock() {
@@ -32,49 +35,65 @@ namespace BTEJA_Lexer_Cv3.ParserRes
             {
                 block.AddVars(ReadVars());
             }
-            
-            while (lexer.PeekToken().Type == Token.TokenType.Procedure)
+
+            while (lexer.PeekToken() != null && lexer.PeekToken().Type == Token.TokenType.Procedure)
             {
                 block.AddProcedure(ReadProcedure());
             }
-            /*
-            block.Statement = ReadStatement();*/
+            block.Statement = ReadStatement();
             return block;
         }
 
         private Statement ReadStatement()
         {
+            Console.WriteLine("ReadStatement: " + lexer.PeekToken().Type);
             switch (lexer.PeekToken().Type)
             {
                 case Token.TokenType.Ident: return ReadSetStatement();
                 case Token.TokenType.Call: return ReadCallStatement();
-                case Token.TokenType.Read: return ReadReadStatement();
-                case Token.TokenType.Write: return ReadWriteStatement();
+                case Token.TokenType.Question: return ReadReadStatement();
+                case Token.TokenType.Exclamation: return ReadWriteStatement();
                 case Token.TokenType.Begin: return ReadBeginEndStatement();
                 case Token.TokenType.If: return ReadIfStatement();
                 case Token.TokenType.While: return ReadWhileStatement();
             }
-            throw new Exception("Invalid statement token.");
+            Console.WriteLine(lexer.PeekToken().Type);
+            throw new Exception("Invalid statement token. " + lexer.PeekToken().Type);
             return null;
         }
 
         private Statement ReadWhileStatement()
         {
-            throw new NotImplementedException();
+            WhileStatement whileStatement = new WhileStatement();
+            lexer.ReadToken();
+            whileStatement.Cond = ReadCondition();
+            if (lexer.PeekToken().Type != Token.TokenType.Do) throw new Exception("Expected do after condition [reading while statement]]");
+            lexer.ReadToken();
+            whileStatement.Statement = ReadStatement();
+            return whileStatement;
         }
 
         private Statement ReadIfStatement()
         {
-            throw new NotImplementedException();
+            IfStatement ifStatement = new IfStatement();
+            lexer.ReadToken();
+            ifStatement.Cond = ReadCondition();
+            if (lexer.PeekToken().Type != Token.TokenType.Then) throw new Exception("Expected then after condition [reading if statement]]");
+            lexer.ReadToken();
+            ifStatement.Statement = ReadStatement();
+            return ifStatement;
         }
 
         private Statement ReadBeginEndStatement()
         {
             lexer.ReadToken();
             BeginEndStatement beginEndStatement = new BeginEndStatement();
-            while (lexer.PeekToken().Type != Token.TokenType.End)
+            beginEndStatement.statements.Add(ReadStatement());
+            while (lexer.PeekToken().Type == Token.TokenType.SemiColon)
             {
+                lexer.ReadToken();
                 beginEndStatement.statements.Add(ReadStatement());
+
             }
             lexer.ReadToken();
             return beginEndStatement;
@@ -89,47 +108,42 @@ namespace BTEJA_Lexer_Cv3.ParserRes
         private Statement ReadReadStatement()
         {
             lexer.ReadToken();
-            if (lexer.PeekToken().Type != Token.TokenType.Ident)
-            {
-                throw new Exception("Expected IDENT");
-            }
+            if (lexer.PeekToken().Type != Token.TokenType.Ident) throw new Exception("Expected IDENT");
             return new ReadStatement(lexer.ReadToken().Value);
         }
 
         private Statement ReadCallStatement()
         {
             lexer.ReadToken();
-            if (lexer.PeekToken().Type != Token.TokenType.Ident)
-            {
-                throw new Exception("Expected IDENT");
-            }
+            if (lexer.PeekToken().Type != Token.TokenType.Ident) throw new Exception("Expected IDENT");
             return new CallStatement(lexer.ReadToken().Value);
         }
 
         private Statement ReadSetStatement()
         {
-            if (lexer.PeekToken().Type != Token.TokenType.Ident)
-            {
-                throw new Exception("Expected IDENT");
-            }
+            if (lexer.PeekToken().Type != Token.TokenType.Ident) throw new Exception("Expected IDENT");
+            //Console.WriteLine("AT ident: " + lexer.PeekToken().Value);
             var identifier = lexer.ReadToken().Value;
-            if (lexer.PeekToken().Type != Token.TokenType.SetEqual)
-            {
-                throw new Exception("Expected :=");
-            }
-            return new SetStatement(identifier,ReadExpression());
+            if (lexer.PeekToken().Type != Token.TokenType.SetEqual) throw new Exception("Expected :=");
+            lexer.ReadToken();
+            Expression expr = ReadExpression();
+            //Console.WriteLine(lexer.PeekToken().Type);
+            return new SetStatement(identifier,expr);
         }
 
         private Procedure ReadProcedure()
         {
             Procedure procedure = new Procedure();
+            if (lexer.PeekToken().Type != Token.TokenType.Procedure) throw new Exception("Expected procedure [reading procedures]]");
             lexer.ReadToken();
-            if (lexer.PeekToken().Type != Token.TokenType.Ident) throw new Exception("Expected ident [reading procedures]]");
-            procedure
-
-
-
-            return null;
+            if (lexer.PeekToken().Type != Token.TokenType.Ident) throw new Exception("Expected ident after procedure [reading procedures]]");
+            procedure.Ident = lexer.ReadToken().Value;
+            if (lexer.PeekToken().Type != Token.TokenType.SemiColon) throw new Exception("Expected ; after procedure identifier [reading procedures]]");
+            lexer.ReadToken();
+            procedure.Block = ReadBlock();
+            if (lexer.PeekToken().Type != Token.TokenType.SemiColon) throw new Exception("Expected ; after procedure block [reading procedures]]");
+            lexer.ReadToken();
+            return procedure;
         }
 
         private List<Var> ReadVars()
@@ -324,8 +338,17 @@ namespace BTEJA_Lexer_Cv3.ParserRes
                 Expr = ReadExpression();
                 lexer.ReadToken();
             }
-            else { 
-                Expr = ReadLiteralExpression();
+            else {
+                if (lexer.PeekToken().Type == Token.TokenType.Ident)
+                {
+                    Expr = ReadIdentExpression();
+                } else if (lexer.PeekToken().Type == Token.TokenType.Number) {
+                    Expr = ReadLiteralExpression();
+                }
+                else {
+                    throw new Exception("Read factor unexpected exception.");
+                }
+                
             }
             return Expr;
         }
@@ -334,6 +357,12 @@ namespace BTEJA_Lexer_Cv3.ParserRes
         {
             LiteralExpression expr = new LiteralExpression();
             expr.NumberLit = Double.Parse(lexer.ReadToken().Value);
+            return expr;
+        }
+        private Expression ReadIdentExpression()
+        {
+            IdentExpression expr = new IdentExpression();
+            expr.Ident = lexer.ReadToken().Value;
             return expr;
         }
 

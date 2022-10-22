@@ -16,6 +16,8 @@ namespace BTEJA_Lexer_Cv3.ParserRes
         public Block()
         {
             Procedures = new List<Procedure>();
+            Consts = new List<Const>();
+            Vars = new List<Var>();
         }
 
         public void AddConsts(List<Const> consts)

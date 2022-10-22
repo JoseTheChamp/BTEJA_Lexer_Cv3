@@ -8,6 +8,7 @@ namespace BTEJA_Lexer_Cv3.ParserRes
 {
     public class WhileStatement : Statement
     {
-        public string ident { get; set; }
+        public Statement Statement { get; set; }
+        public Condition Cond { get; set; }
     }
 }

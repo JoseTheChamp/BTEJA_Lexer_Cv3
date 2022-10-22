@@ -9,7 +9,7 @@ List<Token> tokens =  lexer.Lexicate(text);
 
 foreach (Token token in tokens)
 {
-    if (token.Type == Token.TokenType.Ident || token.Type == Token.TokenType.NumLit)
+    if (token.Type == Token.TokenType.Ident || token.Type == Token.TokenType.Number)
     {
         Console.WriteLine("Token:  " + token.Type.ToString() + "  " + token.Value.ToString());
     }
@@ -20,6 +20,8 @@ foreach (Token token in tokens)
 
 Parser parser = new Parser(lexer);
 Block block = parser.Parse();
+
+//Testing print
 Console.WriteLine("Vysledek: " + block);
 foreach (var item in block.Consts)
 {
@@ -28,6 +30,14 @@ foreach (var item in block.Consts)
 foreach (var item in block.Vars)
 {
     Console.WriteLine(item.ident);
+}
+foreach (var procedure in block.Procedures)
+{
+    Console.WriteLine("Procedure: " + procedure.Ident);
+    foreach (var var1 in procedure.Block.Vars)
+    {
+        Console.WriteLine(var1.ident);
+    }
 }
 
 /*

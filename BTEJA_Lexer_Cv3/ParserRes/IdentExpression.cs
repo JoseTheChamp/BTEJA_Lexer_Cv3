@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace BTEJA_Lexer_Cv3.ParserRes
 {
-    public class BeginEndStatement : Statement
+    internal class IdentExpression : Expression
     {
-        public List<Statement> statements { get; set; }
+        public string Ident { get; set; }
 
-        public BeginEndStatement()
+        public override double eval()
         {
-            statements = new List<Statement>();
+            throw new NotImplementedException();
         }
     }
 }

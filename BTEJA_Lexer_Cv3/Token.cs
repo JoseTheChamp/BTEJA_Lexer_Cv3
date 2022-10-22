@@ -17,7 +17,6 @@ namespace BTEJA_Lexer_Cv3
             Equals,
             SemiColon,
             Ident,
-            NumLit,
             SmallerOrEqual,
             GreaterOrEqual,
             SetEqual,
@@ -45,9 +44,7 @@ namespace BTEJA_Lexer_Cv3
             Do,
             Odd,
             If,
-            Then,
-            Read,
-            Write
+            Then
             //Cond, //temporary
             //Expr
         }

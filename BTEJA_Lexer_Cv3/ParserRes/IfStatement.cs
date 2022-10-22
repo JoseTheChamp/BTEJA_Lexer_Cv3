@@ -8,5 +8,17 @@ namespace BTEJA_Lexer_Cv3.ParserRes
 {
     public class IfStatement : Statement
     {
+        public Statement Statement { get; set; }
+        public Condition Cond { get; set; }
+
+        public IfStatement()
+        {
+        }
+
+        public IfStatement(Statement statement, Condition cond)
+        {
+            Statement = statement;
+            Cond = cond;
+        }
     }
 }
