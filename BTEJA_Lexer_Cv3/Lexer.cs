@@ -111,7 +111,7 @@
                     case '*': tokens.Add(new Token(Token.TokenType.Multi)); break;
                     case '/': tokens.Add(new Token(Token.TokenType.Division)); break;
                     case '(': tokens.Add(new Token(Token.TokenType.LParanthesis)); break;
-                    case ')': tokens.Add(new Token(Token.TokenType.LParanthesis)); break;
+                    case ')': tokens.Add(new Token(Token.TokenType.RParanthesis)); break;
                     case '.': tokens.Add(new Token(Token.TokenType.Dot)); break;
                     case '=': tokens.Add(new Token(Token.TokenType.Equals)); break;
                     case '\n': break;
