@@ -10,7 +10,7 @@ namespace BTEJA_Lexer_Cv3.ParserRes
     {
         public double NumberLit { get; set; }
 
-        public override double eval()
+        public override double Eval(ExecutionContextC executionContextC)
         {
             return NumberLit;
         }

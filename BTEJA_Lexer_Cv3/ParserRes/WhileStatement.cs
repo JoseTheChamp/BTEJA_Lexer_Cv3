@@ -10,5 +10,13 @@ namespace BTEJA_Lexer_Cv3.ParserRes
     {
         public Statement Statement { get; set; }
         public Condition Cond { get; set; }
+
+        public override void Execute(ExecutionContextC executionContextC)
+        {
+            while (Cond.Eval(executionContextC) == 1) {
+                //Console.WriteLine("Running");
+                Statement.Execute(executionContextC);
+            }
+        }
     }
 }

@@ -9,9 +9,10 @@ namespace BTEJA_Lexer_Cv3.ParserRes
     public class OddCondition : Condition
     {
         public Expression Expr { get; set; }
-        public override double eval()
+
+        public override double Eval(ExecutionContextC executionContextC)
         {
-            if (Expr.eval() % 2 == 0)
+            if (Expr.Eval(executionContextC) % 2 == 0)
             {
                 return 1;
             }

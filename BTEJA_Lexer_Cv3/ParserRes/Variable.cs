@@ -6,13 +6,15 @@ using System.Threading.Tasks;
 
 namespace BTEJA_Lexer_Cv3.ParserRes
 {
-    internal class IdentExpression : Expression
+    public class Variable
     {
         public string Ident { get; set; }
+        public double Value { get; set; }
 
-        public override double Eval(ExecutionContextC executionContextC)
+        public Variable(string ident, double value)
         {
-            return executionContextC.variables.Get(Ident);
+            this.Ident = ident;
+            this.Value = value;
         }
     }
 }

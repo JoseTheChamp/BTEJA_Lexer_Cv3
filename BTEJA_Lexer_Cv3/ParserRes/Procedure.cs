@@ -20,5 +20,47 @@ namespace BTEJA_Lexer_Cv3.ParserRes
             Ident = ident;
             Block = block;
         }
+
+        public void Execute(ExecutionContextC executionContextC) { 
+            ExecutionContextC executionContextC1 = new ExecutionContextC();
+            executionContextC1.GlobalEexecutionContextC = executionContextC.GlobalEexecutionContextC;
+            executionContextC1.variables = new Variables();
+            executionContextC1.programContext = new ProgramContext();
+            /*Console.WriteLine("Executing: " + Ident);
+            foreach (var var in Block.Vars)
+            {
+                Console.WriteLine(var.ident);
+            }*/
+            foreach (var var in executionContextC.GlobalEexecutionContextC.variables.vars)
+            {
+                executionContextC1.variables.AddVariable(var);
+            }
+            foreach (var proc in executionContextC.GlobalEexecutionContextC.programContext.procedures)
+            {
+                executionContextC1.programContext.AddProcedure(proc);
+            }
+            foreach (var var in Block.Vars)
+            {
+                executionContextC1.variables.AddVariable(new Variable(var.ident,0));
+            }
+            foreach (var proc in Block.Procedures)
+            {
+                executionContextC1.programContext.AddProcedure(proc);
+            }
+            /*
+            Console.WriteLine("//// proc: " + Ident);
+            foreach (var var in Block.Vars)
+            {
+                Console.WriteLine(var.ident);
+            }
+            Console.WriteLine("/////////// orig");
+            foreach (var var in executionContextC.GlobalEexecutionContextC.variables.vars)
+            {
+                Console.WriteLine(var.Ident);
+            }
+            */
+            //Console.WriteLine("Executing function: " + Ident);
+            Block.Statement.Execute(executionContextC1);
+        }
     }
 }

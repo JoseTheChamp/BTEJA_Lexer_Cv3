@@ -8,9 +8,9 @@ namespace BTEJA_Lexer_Cv3.ParserRes
 {
     public class PlusUnary : UnaryExpression
     {
-        public override double eval()
+        public override double Eval(ExecutionContextC executionContextC)
         {
-            return Expr.eval();
+            return Expr.Eval(executionContextC);
         }
     }
 }

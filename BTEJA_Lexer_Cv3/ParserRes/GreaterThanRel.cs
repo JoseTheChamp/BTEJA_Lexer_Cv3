@@ -8,9 +8,9 @@ namespace BTEJA_Lexer_Cv3.ParserRes
 {
     public class GreaterThanRel : BinaryRelCondition
     {
-        public override double eval()
+        public override double Eval(ExecutionContextC executionContextC)
         {
-            if (Left.eval() > Right.eval())
+            if (Left.Eval(executionContextC) > Right.Eval(executionContextC))
             {
                 return 1;
             }

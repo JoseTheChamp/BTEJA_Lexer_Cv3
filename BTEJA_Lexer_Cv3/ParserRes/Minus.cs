@@ -8,9 +8,9 @@ namespace BTEJA_Lexer_Cv3.ParserRes
 {
     public class Minus : BinaryExpression
     {
-        public override double eval()
+        public override double Eval(ExecutionContextC executionContextC)
         {
-            return Left.eval() - Right.eval();
+            return Left.Eval(executionContextC) - Right.Eval(executionContextC);
         }
     }
 }

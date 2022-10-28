@@ -14,5 +14,10 @@ namespace BTEJA_Lexer_Cv3.ParserRes
         {
             this.ident = ident;
         }
+
+        public override void Execute(ExecutionContextC executionContextC)
+        {
+            executionContextC.programContext.Call(ident,executionContextC);
+        }
     }
 }

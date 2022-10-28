@@ -16,5 +16,11 @@ namespace BTEJA_Lexer_Cv3.ParserRes
             this.ident = ident;
             this.expr = expr;
         }
+
+        public override void Execute(ExecutionContextC executionContextC)
+        {
+            //Console.WriteLine("Set " + ident + " to " + expr.Eval(executionContextC));
+            executionContextC.variables.Set(ident,expr.Eval(executionContextC));
+        }
     }
 }

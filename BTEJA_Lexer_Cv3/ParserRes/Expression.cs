@@ -9,6 +9,6 @@ namespace BTEJA_Lexer_Cv3.ParserRes
     public abstract class Expression : Evaluable
     {
 
-        public abstract double eval();
+        public abstract double Eval(ExecutionContextC executionContextC);
     }
 }

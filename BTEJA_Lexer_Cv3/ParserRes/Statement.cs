@@ -8,6 +8,6 @@ namespace BTEJA_Lexer_Cv3.ParserRes
 {
     public abstract class Statement
     {
-
+        public abstract void Execute(ExecutionContextC executionContextC);
     }
 }

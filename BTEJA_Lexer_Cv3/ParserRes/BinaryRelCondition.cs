@@ -10,5 +10,6 @@ namespace BTEJA_Lexer_Cv3.ParserRes
     {
         public Expression Left { get; set; }
         public Expression Right { get; set; }
+
     }
 }

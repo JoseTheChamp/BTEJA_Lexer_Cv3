@@ -17,12 +17,13 @@ namespace BTEJA_Lexer_Cv3.ParserRes
             this.lexer = lexer;
         }
 
-        public Block Parse()
+        public ProgramBlock Parse()
         {
-            Block block = ReadBlock();
+            ProgramBlock programBlock = new ProgramBlock();
+            programBlock.Block = ReadBlock();
             if (lexer.PeekToken().Type != Token.TokenType.Dot) throw new Exception("Expected . after statements [Parsing]]");
             lexer.ReadToken();
-            return block;
+            return programBlock;
         }
 
         private Block ReadBlock() {
@@ -305,25 +306,31 @@ namespace BTEJA_Lexer_Cv3.ParserRes
         }
         
         private Expression ReadTerm() {
+            Console.WriteLine("ReadTerm");
             Expression Expr;
-            String op = "";
+            Token.TokenType op;
             Expr = ReadFactor();
             while (lexer.PeekToken() != null && (lexer.PeekToken().Type == Token.TokenType.Multi || lexer.PeekToken().Type == Token.TokenType.Division))
             {
-                op = lexer.ReadToken().ToString();
-                if (op == "/")
+                op = lexer.ReadToken().Type;
+                if (op == Token.TokenType.Division)
                 {
                     Divide divide = new Divide();
                     divide.Left = Expr;
                     divide.Right = ReadFactor();
                     Expr = divide;
+
                 }
-                else
+                else if (op == Token.TokenType.Multi)
                 {
                     Multiply multiply = new Multiply();
                     multiply.Left = Expr;
                     multiply.Right = ReadFactor();
                     Expr = multiply;
+                }
+                else
+                {
+                    throw new Exception("Expected * or /");
                 }
             }
             return Expr;

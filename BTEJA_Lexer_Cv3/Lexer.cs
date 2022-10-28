@@ -116,6 +116,7 @@
                     case '=': tokens.Add(new Token(Token.TokenType.Equals)); break;
                     case '\n': break;
                     case '\r': break;
+                    case '\b': break;
 
                 }
             }
@@ -161,7 +162,7 @@
                 {
                     tokens.Add(new Token(Token.TokenType.Number, num.ToString()));
                 }
-                else if (s != "\n")
+                else if (s != "\n" || s != "\b" || s != "\r")
                 {
                     tokens.Add(new Token(Token.TokenType.Ident, s));
                 }

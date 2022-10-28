@@ -14,5 +14,13 @@ namespace BTEJA_Lexer_Cv3.ParserRes
         {
             statements = new List<Statement>();
         }
+
+        public override void Execute(ExecutionContextC executionContextC)
+        {
+            foreach (var item in statements)
+            {
+                item.Execute(executionContextC);
+            }
+        }
     }
 }

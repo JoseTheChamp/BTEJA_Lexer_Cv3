@@ -8,6 +8,6 @@ namespace BTEJA_Lexer_Cv3.ParserRes
 {
     public abstract class Condition : Evaluable
     {
-        public abstract double eval();
+        public abstract double Eval(ExecutionContextC executionContextC);
     }
 }
