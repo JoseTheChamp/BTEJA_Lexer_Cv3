@@ -41,7 +41,11 @@ namespace BTEJA_Lexer_Cv3.ParserRes
             }
             foreach (var var in Block.Vars)
             {
-                executionContextC1.variables.AddVariable(new Variable(var.ident,0));
+                executionContextC1.variables.AddVariable(new Variable(var.ident,0,false));
+            }
+            foreach (var con in Block.Consts)
+            {
+                executionContextC1.variables.AddVariable(new Variable(con.ident, con.value, true));
             }
             foreach (var proc in Block.Procedures)
             {

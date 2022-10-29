@@ -44,16 +44,24 @@ namespace BTEJA_Lexer_Cv3.ParserRes
             throw new Exception("Proměná nebyla definovaná [" + ident + "].");
         }
 
-        public void Set(string ident, double value) {
+        public void Set(string ident, double value, bool? isConstant) {
             foreach (var var in vars)
             {
                 if (var.Ident == ident)
                 {
-                    var.Value = value;
-                    return;
+                    if (var.IsConstant == false)
+                    {
+                        Console.WriteLine("Setting " + var.Ident + " to " + value);
+                        var.Value = value;
+                        return;
+                    }
+                    else {
+                        Console.WriteLine("ELSE-Setting " + var.Ident + " to " + value);
+                        throw new Exception("Nemůžete zapisovat do konstanty.");
+                    }
                 }
             }
-            vars.Add(new Variable(ident,value));
+            vars.Add(new Variable(ident,value,isConstant));
         }
     }
 }

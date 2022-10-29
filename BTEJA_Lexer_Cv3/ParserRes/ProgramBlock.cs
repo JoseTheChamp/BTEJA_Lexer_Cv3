@@ -15,9 +15,13 @@ namespace BTEJA_Lexer_Cv3.Parser
             ExecutionContextC executionContextC = new ExecutionContextC();
             ExecutionContextC globalexecutionContext = new ExecutionContextC();
             List<Variable> vars = new List<Variable>();
-            foreach (var var in Block.Vars)
+            foreach (var con in Block.Consts)
             {
-                vars.Add(new Variable(var.ident, 0.0));
+                vars.Add(new Variable(con.ident, con.value, true));
+            }
+            foreach (var var in Block.Vars) 
+            {
+                vars.Add(new Variable(var.ident, 0.0, false));
             }
             globalexecutionContext.variables = new Variables(vars);
             executionContextC.variables = new Variables(vars);

@@ -10,11 +10,13 @@ namespace BTEJA_Lexer_Cv3.ParserRes
     {
         public string Ident { get; set; }
         public double Value { get; set; }
+        public bool? IsConstant { get; set; }
 
-        public Variable(string ident, double value)
+        public Variable(string ident, double value,bool? isConstant)
         {
             this.Ident = ident;
             this.Value = value;
+            this.IsConstant = isConstant;
         }
     }
 }

@@ -20,7 +20,7 @@ namespace BTEJA_Lexer_Cv3.ParserRes
         public override void Execute(ExecutionContextC executionContextC)
         {
             //Console.WriteLine("Set " + ident + " to " + expr.Eval(executionContextC));
-            executionContextC.variables.Set(ident,expr.Eval(executionContextC));
+            executionContextC.variables.Set(ident,expr.Eval(executionContextC),null);
         }
     }
 }

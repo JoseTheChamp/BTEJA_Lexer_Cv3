@@ -20,7 +20,7 @@ namespace BTEJA_Lexer_Cv3.ParserRes
         {
             double db = double.Parse(Console.ReadLine().Trim());
             Console.WriteLine("Set " + ident + " to " + db);
-            executionContextC.variables.Set(ident,db);
+            executionContextC.variables.Set(ident,db,null);
         }
     }
 }
